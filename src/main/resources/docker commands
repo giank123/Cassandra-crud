@@ -1,0 +1,36 @@
+-- Local
+D:\srv\apache-cassandra-3.11.11\bin
+
+cassandra -f
+
+
+-- Docker
+
+docker pull cassandra
+
+docker run -d --name cassandra-dev -p 9042:9042 -v ~/apps/cassandra:/var/lib/cassandra -e CASSANDRA_CLUSTER_NAME=cluster-dev cassandra
+
+docker exec -it my-cassandra /bin/sh
+
+# cqlsh -u cassandra -p cassandra
+
+
+CREATE KEYSPACE ARQ_HEX_01 WITH replication = {'class':'SimpleStrategy', 'replication_factor' : 1};
+
+USE ARQ_HEX_01;
+
+CREATE TABLE CALIFICACION(
+   CALIFICACION_ID UUID PRIMARY KEY,
+   MEDICO_ID int, 
+   VALOR int, 
+   FECHA timestamp
+   );
+
+INSERT INTO CALIFICACION(CALIFICACION_ID,MEDICO_ID,VALOR,FECHA) VALUES(uuid(),1,1,toUnixTimestamp(now()));
+INSERT INTO CALIFICACION(CALIFICACION_ID,MEDICO_ID,VALOR,FECHA) VALUES(uuid(),1,1,toUnixTimestamp(now()));
+INSERT INTO CALIFICACION(CALIFICACION_ID,MEDICO_ID,VALOR,FECHA) VALUES(uuid(),2,5,toUnixTimestamp(now()));
+
+CREATE INDEX IND_MEDICO_ID ON CALIFICACION(MEDICO_ID);
+
+CREATE INDEX IND_VALOR ON CALIFICACION(VALOR);
+
